@@ -1,0 +1,45 @@
+---
+title: "City data"
+---
+
+<h1 id="city-title">Publications</h1>
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+
+library(DT)
+library(dplyr)
+
+source("helpers.R")
+
+dat <- read.csv("intermediates/final_dat.csv")
+
+
+fancy_dt(dat[c("ID", "Ticks", "year", "ArticleTitle", "city")], 
+         options = list(
+    pageLength = 50,
+    dom = "Bfrtip",
+    buttons = c("copy", "csv"),
+    columnDefs = list(
+      list(targets = 0, render = render_publication),
+      list(targets = 4, render = render_city)
+    ),
+    initComplete = JS("
+      function(settings, json) {
+        const params = new URLSearchParams(window.location.search);
+        
+        let city = decodeURIComponent(window.location.search.substring(1));
+        
+        if (city) {
+          $('#city-title').text('Publications from ' + city);
+          document.title = 'Publications from ' + city;
+          
+          var api = this.api();
+          api.column(4).search('^' + $.fn.dataTable.util.escapeRegex(city) + '$', true, false).draw();
+        } 
+      }
+    ")))
+
+```

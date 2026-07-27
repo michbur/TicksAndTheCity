@@ -1,0 +1,36 @@
+project:
+  type: website
+  output-dir: docs
+  render:
+    - "*.qmd"
+    - "!data"
+    - "!intermediates"
+
+website:
+  title: "Ticks and the city"
+  open-graph: true
+  twitter-card: true
+  navbar:
+    left:
+      - href: map.qmd
+        text: Map
+      - href: table.qmd
+        text: Table
+  page-footer:
+    background: light
+    left:
+      - text: <i class="bi bi-question-circle"></i> Help
+        href: help.qmd
+    center:
+      - icon: fig/bg_logo.png
+        text: <a href="https://biogenies.info/">&copy; 2026 Website developed by BioGenies team.</a>
+    right:
+      - text: <i class="bi bi-envelope-paper-fill"></i> Contact
+        href: contact.qmd
+
+
+format:
+  html:
+    theme: cosmo
+    css: www/style.css
+    toc: false

@@ -1,0 +1,135 @@
+---
+title: "Publication Details"
+---
+
+<!-- Placeholder alerts for loading and errors -->
+<div id="loading" class="alert alert-info">Loading publication data...</div>
+<div id="error-message" class="alert alert-danger" style="display: none;"></div>
+
+<!-- The Publication Card (Hidden until data loads) -->
+<div id="publication-card" class="card shadow-sm mt-3" style="display: none;">
+<div class="card-body">
+    
+<h2 id="pub-title" class="card-title text-primary mb-3"></h2>
+    
+<div class="mb-3 text-muted" style="font-size: 1.1rem;">
+  <strong>Journal:</strong> <span id="pub-journal"></span> | 
+  <strong>Year:</strong> <span id="pub-year"></span> | 
+  <strong>City:</strong> <a id="pub-city" href="#" target="_blank"></a></p>
+</div>
+
+<p><strong>DOI:</strong> <a id="pub-doi" href="#" target="_blank"></a></p>
+    
+<hr>
+    
+<h4 class="mt-4">Abstract</h4>
+<p id="pub-abstract" style="line-height: 1.6; text-align: justify;"></p>
+    
+<hr>
+    
+<div class="row mt-4">
+<div class="col-md-6 mb-2">
+  <strong>Detected Ticks:</strong> <span id="pub-ticks" class="badge bg-secondary"></span>
+</div>
+<div class="col-md-6 mb-2">
+  <strong>Notes:</strong> <span id="pub-notes"></span>
+</div>
+</div>
+    
+<div class="mt-4 text-end text-muted" style="font-size: 0.85rem;">
+Record ID: <span id="pub-id"></span>
+</div>
+    
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  
+
+  function setText(id, text) {
+    const el = document.getElementById(id);
+    if (el) {
+      el.textContent = text;
+    } else {
+      console.warn("Missing HTML element: " + id);
+    }
+  }
+
+
+  const params = new URLSearchParams(window.location.search);
+  let pubId = params.get('ID') || params.get('id') || window.location.search.substring(1).replace('ID=', '');
+
+  const loadingEl = document.getElementById('loading');
+  const errorEl = document.getElementById('error-message');
+  const cardEl = document.getElementById('publication-card');
+
+  if (!pubId) {
+    if (loadingEl) loadingEl.style.display = 'none';
+    if (errorEl) {
+      errorEl.textContent = "No publication ID specified in the URL.";
+      errorEl.style.display = 'block';
+    }
+    return;
+  }
+
+  Papa.parse("./intermediates/final_dat.csv", {
+    download: true,
+    header: true,
+    skipEmptyLines: true,
+    complete: function (results) {
+      
+
+      const pub = results.data.find(row => row.ID === pubId);
+
+      if (loadingEl) loadingEl.style.display = 'none';
+
+      if (!pub) {
+        if (errorEl) {
+          errorEl.textContent = "Publication not found for ID: " + pubId;
+          errorEl.style.display = 'block';
+        }
+        return;
+      }
+
+      setText('pub-title', pub.ArticleTitle || "Not available");
+      setText('pub-journal', pub.Title || "Not available");
+      setText('pub-year', pub.year || "Not available");
+      setText('pub-city', pub.city || "Not available");
+      setText('pub-abstract', pub.AbstractText || "Not available");
+      setText('pub-notes', pub.notes || "Not available");
+      setText('pub-id', pub.ID);
+
+
+      const doiLink = document.getElementById('pub-doi');
+      if (doiLink) {
+        if (pub.DOI && pub.DOI !== "NA") {
+          doiLink.textContent = pub.DOI;
+          doiLink.href = "https://doi.org/" + pub.DOI;
+        } 
+      }
+      
+      const cityLink = document.getElementById('pub-city');
+      if (cityLink) {
+        if (pub.city && pub.city !== "NA") {
+          cityLink.textContent = pub.city;
+          cityLink.href = "city.html?" + pub.city;
+        } 
+      }
+
+
+      if (cardEl) cardEl.style.display = 'block';
+      document.title = pub.ArticleTitle || "Publication Details";
+    },
+    error: function(err) {
+      if (loadingEl) loadingEl.style.display = 'none';
+      if (errorEl) {
+        errorEl.textContent = "Error loading data file. Check your file path.";
+        errorEl.style.display = 'block';
+      }
+    }
+  });
+});
+</script>

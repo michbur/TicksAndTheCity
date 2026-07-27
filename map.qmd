@@ -1,0 +1,51 @@
+---
+title: "Main map"
+---
+
+```{r}
+#| label: main-map
+#| echo: false
+#| message: false
+#| warning: false
+#| 
+library(leaflet)
+library(dplyr)
+
+dat <- read.csv("intermediates/final_dat.csv")
+
+cities_locations <- readRDS("./intermediates/cities_locations.RDS")
+
+group_by(dat, city) |> 
+  summarise(nice_doi = paste0(DOI, collapse = " <br> "),
+            n = length(DOI)) |> 
+  inner_join(cities_locations) |> 
+  mutate(clickable_link = paste0(
+      "<div class='marker-container'><a href='city.html?", city, "' target='_blank' class='marker-link'>", n, 
+      "</a><span class='city-tooltip'>", city, "</span></div>"
+    )) |>
+  leaflet(options = leafletOptions(minZoom = 3, maxZoom = 10)) |>
+  addProviderTiles(providers$CartoDB.Positron) |>
+  setView(lng = 15, lat = 49, zoom = 4) |> 
+  addLabelOnlyMarkers(
+    lng = ~lon,
+    lat = ~lat,
+    label = ~lapply(clickable_link, htmltools::HTML),
+    labelOptions = labelOptions(
+      noHide = TRUE,
+      direction = "center",
+      textOnly = FALSE,
+      interactive = TRUE,
+      style = list(
+        "font-size" = "21px",
+        "font-weight" = "bold",
+        "color" = "#2c3e50",
+        "cursor" = "pointer",
+        "border-radius" = "6px",
+        "min-width" = "30px",
+        "height" = "30px",
+        "text-align" = "center",
+        "line-height" = "19px"
+      )
+    )
+  )
+```

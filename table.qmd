@@ -1,0 +1,27 @@
+---
+title: "Main table"
+---
+
+```{r}
+#| label: main-table
+#| echo: false
+#| message: false
+#| warning: false
+#| 
+
+library(dplyr)
+
+source("helpers.R")
+
+dat <- read.csv("intermediates/final_dat.csv") |> 
+  mutate(Ticks = factor(Ticks))
+
+fancy_dt(dat[c("ID", "Ticks", "year", "ArticleTitle", "city")], 
+         options = list(pageLength = 50,
+                        dom = "Bfrtip",
+                        columnDefs = list(
+                          list(targets = 0, render = render_publication),
+                          list(targets = 4, render = render_city)),
+                        buttons = c("copy", "csv")))
+
+```
