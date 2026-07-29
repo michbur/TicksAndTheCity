@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Ticks and the city - Publication Details</title>
+<title>Ticks and the city - Help</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -26,10 +26,6 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="site_libs/quarto-nav/headroom.min.js"></script>
 <script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -40,18 +36,6 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
-  "location": "navbar",
-  "copy-button": false,
-  "collapse-after": 3,
-  "panel-placement": "end",
-  "type": "overlay",
-  "limit": 50,
-  "keyboard-shortcut": [
-    "f",
-    "/",
-    "s"
-  ],
-  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -69,11 +53,9 @@ ul.task-list li input[type="checkbox"] {
 
 
 <link rel="stylesheet" href="www/style.css">
-<meta property="og:title" content="Ticks and the city - Publication Details">
-<meta property="og:description" content="">
+<meta property="og:title" content="Ticks and the city - Help">
 <meta property="og:site_name" content="Ticks and the city">
-<meta name="twitter:title" content="Ticks and the city - Publication Details">
-<meta name="twitter:description" content="">
+<meta name="twitter:title" content="Ticks and the city - Help">
 <meta name="twitter:card" content="summary">
 </head>
 
@@ -88,7 +70,6 @@ ul.task-list li input[type="checkbox"] {
     <span class="navbar-title">Ticks and the city</span>
     </a>
   </div>
-            <div id="quarto-search" class="" title="Search"></div>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
@@ -119,7 +100,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Publication Details</h1>
+<h1 class="title">Help</h1>
 </div>
 
 
@@ -136,140 +117,21 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<!-- Placeholder alerts for loading and errors -->
-<div id="loading" class="alert alert-info">
-Loading publication data…
-</div>
-<div id="error-message" class="alert alert-danger" style="display: none;">
-
-</div>
-<!-- The Publication Card (Hidden until data loads) -->
-<div id="publication-card" class="card shadow-sm mt-3" style="display: none;">
-<div class="card-body">
-
-<h2 id="pub-title" class="card-title text-primary mb-3 anchored">
-</h2>
-<div class="mb-3 text-muted" style="font-size: 1.1rem;">
-<strong>Journal:</strong> <span id="pub-journal"></span> | <strong>Year:</strong> <span id="pub-year"></span> | <strong>City:</strong> <a id="pub-city" href="#" target="_blank"></a>
-<p></p>
-</div>
-<p>
-<strong>DOI:</strong> <a id="pub-doi" href="#" target="_blank"></a>
-</p>
-<hr>
-<h4 class="mt-4 anchored">
-Abstract
-</h4>
-<p id="pub-abstract" style="line-height: 1.6; text-align: justify;">
-</p>
-<hr>
-<div class="row mt-4">
-<div class="col-md-6 mb-2">
-<p><strong>Detected Ticks:</strong> <span id="pub-ticks" class="badge bg-secondary"></span></p>
-</div>
-<div class="col-md-6 mb-2">
-<p><strong>Notes:</strong> <span id="pub-notes"></span></p>
-</div>
-</div>
-<div class="mt-4 text-end text-muted" style="font-size: 0.85rem;">
-<p>Record ID: <span id="pub-id"></span></p>
-</div>
-</div>
-</div>
-<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-
-  function setText(id, text) {
-    const el = document.getElementById(id);
-    if (el) {
-      el.textContent = text;
-    } else {
-      console.warn("Missing HTML element: " + id);
-    }
-  }
-
-
-  const params = new URLSearchParams(window.location.search);
-  let pubId = params.get('ID') || params.get('id') || window.location.search.substring(1).replace('ID=', '');
-
-  const loadingEl = document.getElementById('loading');
-  const errorEl = document.getElementById('error-message');
-  const cardEl = document.getElementById('publication-card');
-
-  if (!pubId) {
-    if (loadingEl) loadingEl.style.display = 'none';
-    if (errorEl) {
-      errorEl.textContent = "No publication ID specified in the URL.";
-      errorEl.style.display = 'block';
-    }
-    return;
-  }
-
-  Papa.parse("./intermediates/final_dat.csv", {
-    download: true,
-    header: true,
-    skipEmptyLines: true,
-    complete: function (results) {
-      
-
-      const pub = results.data.find(row => row.ID === pubId);
-
-      if (loadingEl) loadingEl.style.display = 'none';
-
-      if (!pub) {
-        if (errorEl) {
-          errorEl.textContent = "Publication not found for ID: " + pubId;
-          errorEl.style.display = 'block';
-        }
-        return;
-      }
-
-      setText('pub-title', pub.ArticleTitle || "Not available");
-      setText('pub-journal', pub.Title || "Not available");
-      setText('pub-year', pub.year || "Not available");
-      setText('pub-city', pub.city || "Not available");
-      setText('pub-abstract', pub.AbstractText || "Not available");
-      setText('pub-notes', pub.notes || "Not available");
-      setText('pub-id', pub.ID);
-
-
-      const doiLink = document.getElementById('pub-doi');
-      if (doiLink) {
-        if (pub.DOI && pub.DOI !== "NA") {
-          doiLink.textContent = pub.DOI;
-          doiLink.href = "https://doi.org/" + pub.DOI;
-        } 
-      }
-      
-      const cityLink = document.getElementById('pub-city');
-      if (cityLink) {
-        if (pub.city && pub.city !== "NA") {
-          cityLink.textContent = pub.city;
-          cityLink.href = "city.html?" + pub.city;
-        } 
-      }
-
-
-      if (cardEl) cardEl.style.display = 'block';
-      document.title = pub.ArticleTitle || "Publication Details";
-    },
-    error: function(err) {
-      if (loadingEl) loadingEl.style.display = 'none';
-      if (errorEl) {
-        errorEl.textContent = "Error loading data file. Check your file path.";
-        errorEl.style.display = 'block';
-      }
-    }
-  });
-});
-</script>
+<section id="tutorial" class="level1">
+<h1>Tutorial</h1>
+<section id="citation" class="level2">
+<h2 class="anchored" data-anchor-id="citation">Citation</h2>
+</section>
+<section id="acknowledgements" class="level2">
+<h2 class="anchored" data-anchor-id="acknowledgements">Acknowledgements</h2>
 
 <div class="hidden" data-render-id="footer-right-/contact.html">
 <p><i class="bi bi-envelope-paper-fill"></i> Contact</p>
 </div>
 <p>:::</p>
 
+</section>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -687,7 +549,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     <div class="nav-footer-left">
       <ul class="footer-items list-unstyled">
     <li class="nav-item">
-    <a class="nav-link" href="./help.html">
+    <a class="nav-link active" href="./help.html" aria-current="page">
 <p><i class="bi bi-question-circle"></i> Help</p>
 </a>
   </li>  

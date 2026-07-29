@@ -47,7 +47,6 @@ Record ID: <span id="pub-id"></span>
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-  
 
   function setText(id, text) {
     const el = document.getElementById(id);

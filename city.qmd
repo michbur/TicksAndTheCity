@@ -2,7 +2,6 @@
 title: "City data"
 ---
 
-<h1 id="city-title">Publications</h1>
 
 ```{r}
 #| echo: false
@@ -24,7 +23,7 @@ fancy_dt(dat[c("ID", "Ticks", "year", "ArticleTitle", "city")],
     buttons = c("copy", "csv"),
     columnDefs = list(
       list(targets = 0, render = render_publication),
-      list(targets = 4, render = render_city)
+      list(targets = 4, visible = FALSE)
     ),
     initComplete = JS("
       function(settings, json) {
@@ -33,7 +32,7 @@ fancy_dt(dat[c("ID", "Ticks", "year", "ArticleTitle", "city")],
         let city = decodeURIComponent(window.location.search.substring(1));
         
         if (city) {
-          $('#city-title').text('Publications from ' + city);
+          $('h1.title').text('Publications from ' + city);
           document.title = 'Publications from ' + city;
           
           var api = this.api();

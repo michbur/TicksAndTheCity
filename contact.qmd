@@ -1,0 +1,6 @@
+---
+title: "Contact"
+---
+
+For enquiries related to the XYZ, contact:
+* the Project Leader [Michał Burdukiewicz](michalburdukiewicz@gmail.com).

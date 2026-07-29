@@ -25,7 +25,7 @@
     "href": "city.html",
     "title": "City data",
     "section": "",
-    "text": "Publications\n\n\n\n\n\n\n\n\n\n Contact\n\n:::"
+    "text": "Contact\n\n:::"
   },
   {
     "objectID": "publication.html",
@@ -33,5 +33,26 @@
     "title": "Publication Details",
     "section": "",
     "text": "Loading publication data…\n\n\n\n\n\n\n\n\n\n\n\nJournal:  | Year:  | City: \n\n\n\nDOI: \n\n\n\nAbstract\n\n\n\n\n\n\nDetected Ticks: \n\n\nNotes: \n\n\n\nRecord ID: \n\n\n\n\n\n\n\n Contact\n\n:::"
+  },
+  {
+    "objectID": "help.html",
+    "href": "help.html",
+    "title": "Help",
+    "section": "",
+    "text": "Contact\n\n:::"
+  },
+  {
+    "objectID": "help.html#acknowledgements",
+    "href": "help.html#acknowledgements",
+    "title": "Help",
+    "section": "",
+    "text": "Contact\n\n:::"
+  },
+  {
+    "objectID": "contact.html",
+    "href": "contact.html",
+    "title": "Contact",
+    "section": "",
+    "text": "For enquiries related to the XYZ, contact: * the Project Leader Michał Burdukiewicz.\n\n\n Contact\n\n:::"
   }
 ]
