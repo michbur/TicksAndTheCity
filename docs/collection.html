@@ -136,45 +136,44 @@ Loading publication data…
 <div id="error-message" class="alert alert-danger" style="display: none;">
 
 </div>
-<div id="publication-card" class="card shadow-sm mt-3" style="display: none;">
-<div class="card-body">
+<div id="publication-card" class="detail-card" style="display: none;">
 
-<div class="mt-4 text-end text-muted" style="font-size: 0.85rem;">
+<div class="meta-id-block">
 <p>Collection ID: <span id="pub-id"></span></p>
 </div>
 <h2 id="pub-title" class="card-title text-primary mb-3 anchored">
 </h2>
 <section id="collection-data" class="level3">
 <h3 class="anchored" data-anchor-id="collection-data">Collection data</h3>
-<div class="mb-4" style="font-size: 1.1rem; line-height: 1.8;">
-<p class="mb-1">
+<div class="data-list">
+<p>
 <strong>City:</strong> <a id="pub-city" href="#"></a>
 </p>
-<p class="mb-1">
+<p>
 <strong>Country:</strong> <span id="pub-country"></span>
 </p>
-<p class="mb-1">
+<p>
 <strong>Collection Site:</strong> <a id="pub-site" href="#"></a>
 </p>
-<p class="mb-1">
+<p>
 <strong>Exact Location:</strong> <span id="pub-exact-location"></span>
 </p>
-<p class="mb-1">
+<p>
 <strong>Latitude:</strong> <span id="pub-lat"></span>
 </p>
-<p class="mb-1">
+<p>
 <strong>Longitude:</strong> <span id="pub-long"></span>
 </p>
-<p class="mb-1">
+<p>
 <strong>Tick Species:</strong> <span id="pub-species"></span>
 </p>
-<p class="mb-1">
+<p>
 <strong>Source:</strong> <span id="pub-source"></span>
 </p>
-<p class="mb-1">
+<p>
 <strong>Collection Year Start:</strong> <span id="pub-year-start"></span>
 </p>
-<p class="mb-1">
+<p>
 <strong>Collection Year End:</strong> <span id="pub-year-end"></span>
 </p>
 </div>
@@ -182,16 +181,16 @@ Loading publication data…
 </section>
 <section id="publication-data" class="level3">
 <h3 class="anchored" data-anchor-id="publication-data">Publication data</h3>
-<div class="mb-3 text-muted" style="font-size: 1.1rem; line-height: 1.8;">
-<p class="mb-1">
+<div class="data-list">
+<p>
 <strong>Publication year:</strong> <span id="pub-year"></span>
 </p>
-<p class="mb-1">
+<p>
 <strong>DOI:</strong> <a id="pub-doi" href="#" target="_blank"></a>
 </p>
 </div>
 </section></div>
-</div>
+<script src="scripts.js"></script>
 <script>
 document.addEventListener("DOMContentLoaded", async function () {
 const jsonFile = "./intermediates/final_dat.json"; 
@@ -204,7 +203,6 @@ return;
 }
 
 try {
-// Removed lat and long from this array so we can format them manually
 const textFields = [
 ['pub-title', 'ArticleTitle'],
 ['pub-country', 'Country'],
@@ -219,19 +217,17 @@ const textFields = [
 
 await Promise.all([
 ...textFields.map(([id, prop]) => updateElementWithData(jsonFile, id, prop)),
-
 updateElementWithDataAndLink(jsonFile, 'pub-city', 'City', 'LID', 'city.html?'),
 updateElementWithDataAndLink(jsonFile, 'pub-doi', 'DOI', 'DOI', 'publication.html?'),
 updateElementWithDataAndLink(jsonFile, 'pub-site', 'Collection site', ['lat', 'long'], 'map.html?lat=', '&lng=')
 ]);
 
-// Fetch and format the coordinates to 4 decimal places
 const latValue = await getResultValue(jsonFile, 'lat');
 const longValue = await getResultValue(jsonFile, 'long');
 
 const formatCoord = (val) => {
-  if (!val || val === "ID or property not found" || isNaN(val)) return "Not available";
-  return parseFloat(val).toFixed(4);
+if (!val || val === "ID or property not found" || isNaN(val)) return "Not available";
+return parseFloat(val).toFixed(4);
 };
 
 const latEl = document.getElementById('pub-lat');

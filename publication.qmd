@@ -11,22 +11,18 @@ format:
 <div id="loading" class="alert alert-info">Loading publication data...</div>
 <div id="error-message" class="alert alert-danger" style="display: none;"></div>
 
-<!-- 
-  We keep the main content hidden until the JS loads it, 
-  but use standard Markdown headings for the TOC. 
--->
-<div id="publication-info" style="display: none;" class="mb-5">
+<div id="publication-info" style="display: none;" class="detail-card">
 
 ### Publication data
 
-<div class="mt-4 text-end text-muted" style="font-size: 0.85rem;">
+<div class="meta-id-block">
 DOI: <a id="pub-doi-link" href="#" target="_blank"></a> <br>
 PMID: <a id="pub-pmid-link" href="#" target="_blank"></a>
 </div>
 
 <h2 id="pub-title" class="text-primary mb-3"></h2>
 
-<div class="mb-3 text-muted" style="font-size: 1.1rem;">
+<div class="data-list">
 <p><strong>Journal:</strong> <span id="pub-journal"></span></p>
 </div>
 
@@ -39,7 +35,7 @@ PMID: <a id="pub-pmid-link" href="#" target="_blank"></a>
 
 <div id="pub-map" style="height: 400px; display: none; margin-bottom: 2rem;"></div>
 
-</div> <!-- End of publication-info container -->
+</div> 
 
 ### Collection data
 
@@ -172,3 +168,4 @@ datatable(dat[, c("ID", "Tick species", "Source", "Collection year start", "Coll
           )
 )
 ```
+
