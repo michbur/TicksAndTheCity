@@ -6,6 +6,7 @@ project:
     - "!data"
   resources:
     - "intermediates"
+    - "data"
 
 website:
   title: "Ticks and the city"

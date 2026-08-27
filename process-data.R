@@ -120,8 +120,6 @@ df2json(read.csv("intermediates/publications.csv"), read.csv("intermediates/publ
 # build final data --------------
 
 
-
-
 final_dat <- mutate(source_dat, ID = paste0("TIC", sprintf("%06d", 1:nrow(source_dat)))) |> 
   select(-`Sygnatura czasowa`, -`Adres e-mail`, -`Referenced by (later paper DOI)`, -`Referencing (source paper DOI)`, -Comment) |> 
   mutate(`Collection site` = ifelse(is.na(`Collection site`), "Unknown", `Collection site`)) |> 
@@ -134,6 +132,5 @@ final_dat <- mutate(source_dat, ID = paste0("TIC", sprintf("%06d", 1:nrow(source
   select(-AbstractText, -PMID)
 
 write.csv(final_dat, file = "intermediates/final_dat.csv", row.names = FALSE)
-
-
+df2json(final_dat, final_dat[["ID"]], "intermediates/final_dat.json")
 df2json(final_dat, final_dat[["ID"]], "intermediates/final_dat.json")

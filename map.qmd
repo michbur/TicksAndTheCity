@@ -39,7 +39,7 @@ city_dat <- dat |>
 country_dat <- dat |> 
   group_by(Country) |> 
   summarise(n = length(DOI), .groups = "drop") |> 
-  inner_join(read.csv("./intermediates/countries.csv")) |> 
+  inner_join(read.csv("./data/countries.csv")) |> 
   mutate(link = paste0(
     "<div class='marker-container country-zoom' data-lat='", clat, "' data-lng='", clong, "'>", 
     Country, ": ", n, "</div>"
