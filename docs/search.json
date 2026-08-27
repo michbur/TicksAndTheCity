@@ -2,16 +2,9 @@
   {
     "objectID": "table.html",
     "href": "table.html",
-    "title": "Main table",
+    "title": "Collection table",
     "section": "",
     "text": "Contact\n\n:::"
-  },
-  {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "About XYZ",
-    "section": "",
-    "text": "Words, words, words\n\n\n Contact\n\n:::"
   },
   {
     "objectID": "map.html",
@@ -19,20 +12,6 @@
     "title": "Main map",
     "section": "",
     "text": "Contact\n\n:::"
-  },
-  {
-    "objectID": "city.html",
-    "href": "city.html",
-    "title": "City data",
-    "section": "",
-    "text": "Contact\n\n:::"
-  },
-  {
-    "objectID": "publication.html",
-    "href": "publication.html",
-    "title": "Publication Details",
-    "section": "",
-    "text": "Loading publication data…\n\n\n\n\n\n\n\n\n\n\n\nJournal:  | Year:  | City: \n\n\n\nDOI: \n\n\n\nAbstract\n\n\n\n\n\n\nDetected Ticks: \n\n\nNotes: \n\n\n\nRecord ID: \n\n\n\n\n\n\n\n Contact\n\n:::"
   },
   {
     "objectID": "help.html",
@@ -49,10 +28,38 @@
     "text": "Contact\n\n:::"
   },
   {
+    "objectID": "collection.html",
+    "href": "collection.html",
+    "title": "Collection Details",
+    "section": "",
+    "text": "Loading publication data…\n\n\n\n\n\n\n\n\nCollection ID: \n\n\n\n\nCollection data\n\n\nCity: \n\n\nCountry: \n\n\nCollection Site: \n\n\nExact Location: \n\n\nLatitude: \n\n\nLongitude: \n\n\nTick Species: \n\n\nSource: \n\n\nCollection Year Start: \n\n\nCollection Year End: \n\n\n\n\n\nPublication data\n\n\nPublication year: \n\n\nDOI: \n\n\n\n\n\n\n\n Contact\n\n:::"
+  },
+  {
+    "objectID": "city.html",
+    "href": "city.html",
+    "title": "City data",
+    "section": "",
+    "text": "City ID: \n\n\n\n\n\n\n\n\n\n Contact\n\n:::"
+  },
+  {
     "objectID": "contact.html",
     "href": "contact.html",
     "title": "Contact",
     "section": "",
     "text": "For enquiries related to the XYZ, contact: * the Project Leader Michał Burdukiewicz.\n\n\n Contact\n\n:::"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "About XYZ",
+    "section": "",
+    "text": "Ticks and the City\n\n\n Contact\n\n:::"
+  },
+  {
+    "objectID": "publication.html",
+    "href": "publication.html",
+    "title": "Publication Details",
+    "section": "",
+    "text": "Loading publication data…\n\n\n\n\n\n\n\n\nPublication data\n\nDOI:   PMID: \n\n\n\n\n\nJournal: \n\n\n\nAbstract\n\n\n\n\n\n\nCollection map\n\n\n\n\n\n\n\nCollection data\n\n\n\n\n\n\n\n\n\n\n Contact\n\n:::"
   }
 ]

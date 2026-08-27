@@ -1,0 +1,103 @@
+---
+title: "Collection Details"
+format:
+  html:
+    toc: true
+---
+
+<div id="loading" class="alert alert-info">Loading publication data...</div>
+<div id="error-message" class="alert alert-danger" style="display: none;"></div>
+
+<div id="publication-card" class="card shadow-sm mt-3" style="display: none;">
+<div class="card-body">
+
+<div class="mt-4 text-end text-muted" style="font-size: 0.85rem;">
+Collection ID: <span id="pub-id"></span>
+</div>
+
+<h2 id="pub-title" class="card-title text-primary mb-3"></h2>
+
+### Collection data
+
+<div class="mb-4" style="font-size: 1.1rem; line-height: 1.8;">
+<p class="mb-1"><strong>City:</strong> <a id="pub-city" href="#"></a></p>
+<p class="mb-1"><strong>Country:</strong> <span id="pub-country"></span></p>
+<p class="mb-1"><strong>Collection Site:</strong> <a id="pub-site" href="#"></a></p>
+<p class="mb-1"><strong>Exact Location:</strong> <span id="pub-exact-location"></span></p>
+<p class="mb-1"><strong>Latitude:</strong> <span id="pub-lat"></span></p>
+<p class="mb-1"><strong>Longitude:</strong> <span id="pub-long"></span></p>
+<p class="mb-1"><strong>Tick Species:</strong> <span id="pub-species"></span></p>
+<p class="mb-1"><strong>Source:</strong> <span id="pub-source"></span></p>
+<p class="mb-1"><strong>Collection Year Start:</strong> <span id="pub-year-start"></span></p>
+<p class="mb-1"><strong>Collection Year End:</strong> <span id="pub-year-end"></span></p>
+</div>
+
+<hr>
+
+### Publication data
+
+<div class="mb-3 text-muted" style="font-size: 1.1rem; line-height: 1.8;">
+<p class="mb-1"><strong>Publication year:</strong> <span id="pub-year"></span> </p>
+<p class="mb-1"><strong>DOI:</strong> <a id="pub-doi" href="#" target="_blank"></a></p>
+</div>
+
+</div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", async function () {
+const jsonFile = "./intermediates/final_dat.json"; 
+const targetId = decodeURIComponent(window.location.search.substring(1));
+
+if (!targetId) {
+setDisplay('loading', 'none');
+setDisplay('error-message', 'block', "No publication ID specified in the URL.");
+return;
+}
+
+try {
+// Removed lat and long from this array so we can format them manually
+const textFields = [
+['pub-title', 'ArticleTitle'],
+['pub-country', 'Country'],
+['pub-species', 'Tick species'],
+['pub-source', 'Source'],
+['pub-year-start', 'Collection year start'],
+['pub-year-end', 'Collection year end'],
+['pub-exact-location', 'Exact location'],
+['pub-year', 'Publication year'],
+['pub-id', 'ID']
+];
+
+await Promise.all([
+...textFields.map(([id, prop]) => updateElementWithData(jsonFile, id, prop)),
+
+updateElementWithDataAndLink(jsonFile, 'pub-city', 'City', 'LID', 'city.html?'),
+updateElementWithDataAndLink(jsonFile, 'pub-doi', 'DOI', 'DOI', 'publication.html?'),
+updateElementWithDataAndLink(jsonFile, 'pub-site', 'Collection site', ['lat', 'long'], 'map.html?lat=', '&lng=')
+]);
+
+// Fetch and format the coordinates to 4 decimal places
+const latValue = await getResultValue(jsonFile, 'lat');
+const longValue = await getResultValue(jsonFile, 'long');
+
+const formatCoord = (val) => {
+  if (!val || val === "ID or property not found" || isNaN(val)) return "Not available";
+  return parseFloat(val).toFixed(4);
+};
+
+const latEl = document.getElementById('pub-lat');
+const longEl = document.getElementById('pub-long');
+if (latEl) latEl.textContent = formatCoord(latValue);
+if (longEl) longEl.textContent = formatCoord(longValue);
+
+setDisplay('loading', 'none');
+setDisplay('publication-card', 'block');
+
+} catch (error) {
+console.error(error);
+setDisplay('loading', 'none');
+setDisplay('error-message', 'block', "Error populating data on the page.");
+}
+});
+</script>

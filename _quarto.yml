@@ -4,7 +4,8 @@ project:
   render:
     - "*.qmd"
     - "!data"
-    - "!intermediates"
+  resources:
+    - "intermediates"
 
 website:
   title: "Ticks and the city"
@@ -16,7 +17,7 @@ website:
       - href: map.qmd
         text: Map
       - href: table.qmd
-        text: Table
+        text: Collection table
   page-footer:
     background: light
     left:
@@ -35,3 +36,4 @@ format:
     theme: cosmo
     css: www/style.css
     toc: false
+    include-in-header: www/header.html

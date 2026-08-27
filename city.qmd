@@ -1,6 +1,14 @@
 ---
 title: "City data"
+format: 
+  html:
+    page-layout: full
 ---
+
+
+<div class="mt-4 text-end text-muted" style="font-size: 0.85rem;">
+City ID: <span id="city-id"></span>
+</div>
 
 
 ```{r}
@@ -13,32 +21,57 @@ library(dplyr)
 
 source("helpers.R")
 
-dat <- read.csv("intermediates/final_dat.csv")
+dat <- read.csv("intermediates/final_dat.csv", check.names = FALSE)
 
-
-fancy_dt(dat[c("ID", "Ticks", "year", "ArticleTitle", "city")], 
-         options = list(
-    pageLength = 50,
-    dom = "Bfrtip",
-    buttons = c("copy", "csv"),
-    columnDefs = list(
-      list(targets = 0, render = render_publication),
-      list(targets = 4, visible = FALSE)
-    ),
-    initComplete = JS("
-      function(settings, json) {
+datatable(dat[, c("ID", "Tick species", "Publication year", "ArticleTitle", "LID", "DOI")], ,
+          escape = FALSE, 
+          style = "bootstrap5",
+          class = "wrap",
+          filter = "top",
+          extensions = c("Select", "SearchPanes", "Buttons"), 
+          selection = "none",
+          rownames = FALSE,
+          options = list(
+            pageLength = 50,
+            dom = "PBfrtip",
+            buttons = c("copy", "csv"),
+            searchPanes = list(initCollapsed = TRUE, viewCount = FALSE),
+            columnDefs = list(
+              list(targets = c(0, 2:5), searchPanes = list(show = FALSE)),
+              list(targets = 0, render = render_collection),
+              list(targets = 1, 
+                   searchPanes = list(show = TRUE, orthogonal = "sp"),
+                   render = JS("function(data, type, row, meta) {
+                                  if (type === 'sp') {
+                                    return data ? data.split(',').map(function(item) { return item.trim(); }) : data;
+                                  }
+                                return data;
+                               }")),
+              list(targets = 3, render = render_publication_doi(5)),
+              list(targets = 4, visible = FALSE),
+              list(targets = 5, visible = FALSE)
+            ),
+            initComplete = JS("
+      async function(settings, json) {
         const params = new URLSearchParams(window.location.search);
         
         let city = decodeURIComponent(window.location.search.substring(1));
         
         if (city) {
-          $('h1.title').text('Publications from ' + city);
-          document.title = 'Publications from ' + city;
+          const el = document.getElementById('city-id');
+          el.textContent = city;
           
+          let cityName = await getResultValue('intermediates/cities.json', 'City');
+          let countryName = await getResultValue('intermediates/cities.json', 'Country');
+
+          $('h1.title').text('Publications from ' + cityName + ' (' + countryName + ')');
+          document.title = 'Publications from ' + cityName;
+  
           var api = this.api();
           api.column(4).search('^' + $.fn.dataTable.util.escapeRegex(city) + '$', true, false).draw();
         } 
       }
-    ")))
+    "))
+)
 
 ```

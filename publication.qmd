@@ -1,134 +1,174 @@
 ---
 title: "Publication Details"
+format: 
+  html:
+    toc: true
 ---
 
-<!-- Placeholder alerts for loading and errors -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
 <div id="loading" class="alert alert-info">Loading publication data...</div>
 <div id="error-message" class="alert alert-danger" style="display: none;"></div>
 
-<!-- The Publication Card (Hidden until data loads) -->
-<div id="publication-card" class="card shadow-sm mt-3" style="display: none;">
-<div class="card-body">
-    
-<h2 id="pub-title" class="card-title text-primary mb-3"></h2>
-    
-<div class="mb-3 text-muted" style="font-size: 1.1rem;">
-  <strong>Journal:</strong> <span id="pub-journal"></span> | 
-  <strong>Year:</strong> <span id="pub-year"></span> | 
-  <strong>City:</strong> <a id="pub-city" href="#" target="_blank"></a></p>
+<!-- 
+  We keep the main content hidden until the JS loads it, 
+  but use standard Markdown headings for the TOC. 
+-->
+<div id="publication-info" style="display: none;" class="mb-5">
+
+### Publication data
+
+<div class="mt-4 text-end text-muted" style="font-size: 0.85rem;">
+DOI: <a id="pub-doi-link" href="#" target="_blank"></a> <br>
+PMID: <a id="pub-pmid-link" href="#" target="_blank"></a>
 </div>
 
-<p><strong>DOI:</strong> <a id="pub-doi" href="#" target="_blank"></a></p>
-    
-<hr>
-    
+<h2 id="pub-title" class="text-primary mb-3"></h2>
+
+<div class="mb-3 text-muted" style="font-size: 1.1rem;">
+<p><strong>Journal:</strong> <span id="pub-journal"></span></p>
+</div>
+
 <h4 class="mt-4">Abstract</h4>
 <p id="pub-abstract" style="line-height: 1.6; text-align: justify;"></p>
-    
+
 <hr>
-    
-<div class="row mt-4">
-<div class="col-md-6 mb-2">
-  <strong>Detected Ticks:</strong> <span id="pub-ticks" class="badge bg-secondary"></span>
-</div>
-<div class="col-md-6 mb-2">
-  <strong>Notes:</strong> <span id="pub-notes"></span>
-</div>
-</div>
-    
-<div class="mt-4 text-end text-muted" style="font-size: 0.85rem;">
-Record ID: <span id="pub-id"></span>
-</div>
-    
-</div>
-</div>
 
-<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+### Collection map
 
+<div id="pub-map" style="height: 400px; display: none; margin-bottom: 2rem;"></div>
+
+</div> <!-- End of publication-info container -->
+
+### Collection data
+
+<script src="scripts.js"></script>
 <script>
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", async function () {
+const pubJson = "intermediates/publications.json"; 
+const targetDoi = decodeURIComponent(window.location.search.substring(1));
 
-  function setText(id, text) {
-    const el = document.getElementById(id);
-    if (el) {
-      el.textContent = text;
-    } else {
-      console.warn("Missing HTML element: " + id);
-    }
-  }
+if (!targetDoi) {
+setDisplay('loading', 'none');
+setDisplay('error-message', 'block', "No DOI specified in the URL.");
+return;
+}
 
+try {
+await Promise.all([
+updateElementWithData(pubJson, 'pub-title', 'ArticleTitle'),
+updateElementWithData(pubJson, 'pub-abstract', 'AbstractText'),
+updateElementWithData(pubJson, 'pub-journal', 'Title'),
+updateElementWithDataAndLink(pubJson, 'pub-doi-link', 'DOI', 'DOI', 'https://doi.org/'),
+updateElementWithDataAndLink(pubJson, 'pub-pmid-link', 'PMID', 'PMID', 'https://pubmed.ncbi.nlm.nih.gov/')
+]);
 
-  const params = new URLSearchParams(window.location.search);
-  let pubId = params.get('ID') || params.get('id') || window.location.search.substring(1).replace('ID=', '');
+const titleText = document.getElementById('pub-title').textContent;
+if (titleText && titleText !== "ID or property not found") {
+document.title = titleText;
+}
 
-  const loadingEl = document.getElementById('loading');
-  const errorEl = document.getElementById('error-message');
-  const cardEl = document.getElementById('publication-card');
+setDisplay('loading', 'none');
+setDisplay('publication-info', 'block');
 
-  if (!pubId) {
-    if (loadingEl) loadingEl.style.display = 'none';
-    if (errorEl) {
-      errorEl.textContent = "No publication ID specified in the URL.";
-      errorEl.style.display = 'block';
-    }
-    return;
-  }
+const allCollections = await fetchWithCache('intermediates/final_dat.json');
+const mapPoints = Object.values(allCollections).filter(row => row.DOI === targetDoi && row.lat && row.long);
 
-  Papa.parse("./intermediates/final_dat.csv", {
-    download: true,
-    header: true,
-    skipEmptyLines: true,
-    complete: function (results) {
-      
+if (mapPoints.length > 0) {
+const mapContainer = document.getElementById('pub-map');
+mapContainer.style.display = 'block';
 
-      const pub = results.data.find(row => row.ID === pubId);
+const map = L.map('pub-map');
+L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+attribution: '&copy; OpenStreetMap contributors &copy; CARTO'
+}).addTo(map);
 
-      if (loadingEl) loadingEl.style.display = 'none';
+const bounds = L.latLngBounds();
 
-      if (!pub) {
-        if (errorEl) {
-          errorEl.textContent = "Publication not found for ID: " + pubId;
-          errorEl.style.display = 'block';
-        }
-        return;
-      }
-
-      setText('pub-title', pub.ArticleTitle || "Not available");
-      setText('pub-journal', pub.Title || "Not available");
-      setText('pub-year', pub.year || "Not available");
-      setText('pub-city', pub.city || "Not available");
-      setText('pub-abstract', pub.AbstractText || "Not available");
-      setText('pub-notes', pub.notes || "Not available");
-      setText('pub-id', pub.ID);
-
-
-      const doiLink = document.getElementById('pub-doi');
-      if (doiLink) {
-        if (pub.DOI && pub.DOI !== "NA") {
-          doiLink.textContent = pub.DOI;
-          doiLink.href = "https://doi.org/" + pub.DOI;
-        } 
-      }
-      
-      const cityLink = document.getElementById('pub-city');
-      if (cityLink) {
-        if (pub.city && pub.city !== "NA") {
-          cityLink.textContent = pub.city;
-          cityLink.href = "city.html?" + pub.city;
-        } 
-      }
-
-
-      if (cardEl) cardEl.style.display = 'block';
-      document.title = pub.ArticleTitle || "Publication Details";
-    },
-    error: function(err) {
-      if (loadingEl) loadingEl.style.display = 'none';
-      if (errorEl) {
-        errorEl.textContent = "Error loading data file. Check your file path.";
-        errorEl.style.display = 'block';
-      }
-    }
+mapPoints.forEach(pt => {
+  const customHtml = `<div class="marker-container"><a href="collection.html?${pt.ID}" target="_blank" class="marker-link">${pt.ID}</a><span class="city-tooltip"></span></div>`;
+  
+  const invisibleIcon = L.divIcon({ 
+    className: 'empty-icon', 
+    html: '', 
+    iconSize: [0, 0] 
   });
+
+  L.marker([parseFloat(pt.lat), parseFloat(pt.long)], {icon: invisibleIcon})
+    .bindTooltip(customHtml, {
+      permanent: true,
+      direction: "center",
+      className: "custom-map-label",
+      interactive: true
+    })
+    .addTo(map);
+    
+  bounds.extend([parseFloat(pt.lat), parseFloat(pt.long)]);
+});
+
+setTimeout(() => {
+map.invalidateSize();
+map.fitBounds(bounds, {maxZoom: 11, padding: [30, 30]});
+}, 100);
+}
+
+} catch (error) {
+console.error(error);
+setDisplay('loading', 'none');
+setDisplay('error-message', 'block', "Error loading publication data.");
+}
 });
 </script>
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+
+library(DT)
+library(dplyr)
+
+source("helpers.R")
+
+dat <- read.csv("intermediates/final_dat.csv", check.names = FALSE)
+
+datatable(dat[, c("ID", "Tick species", "Source", "Collection year start", "Collection year end", "Collection site", "LID", "DOI")], 
+          escape = FALSE, 
+          style = "bootstrap5",
+          class = "wrap",
+          filter = "top",
+          extensions = c("Select", "SearchPanes", "Buttons"), 
+          selection = "none",
+          rownames = FALSE,
+          options = list(
+            pageLength = 25,
+            dom = "PBfrtip",
+            buttons = c("copy", "csv"),
+            searchPanes = list(initCollapsed = TRUE, viewCount = FALSE),
+            columnDefs = list(
+              list(targets = c(6L:7), visible = FALSE),
+              list(targets = c(0, 3L:7), searchPanes = list(show = FALSE)),
+              list(targets = 0, render = render_collection),
+              list(targets = c(1L:2), 
+                   searchPanes = list(show = TRUE, orthogonal = "sp"),
+                   render = JS("function(data, type, row, meta) {
+                                  if (type === 'sp') {
+                                    return data ? data.split(',').map(function(item) { return item.trim(); }) : data;
+                                  }
+                                return data;
+                               }"))
+            ),
+            initComplete = JS("
+              function(settings, json) {
+                let targetDoi = decodeURIComponent(window.location.search.substring(1));
+                
+                if (targetDoi) {
+                  var api = this.api();
+                  api.column(-1).search('^' + $.fn.dataTable.util.escapeRegex(targetDoi) + '$', true, false).draw();
+                } 
+              }
+            ")
+          )
+)
+```

@@ -1,5 +1,8 @@
 ---
-title: "Main table"
+title: "Collection table"
+format: 
+  html:
+    page-layout: full
 ---
 
 ```{r}
@@ -10,18 +13,36 @@ title: "Main table"
 #| 
 
 library(dplyr)
+library(DT)
 
 source("helpers.R")
 
-dat <- read.csv("intermediates/final_dat.csv") |> 
-  mutate(Ticks = factor(Ticks))
+dat <- read.csv("intermediates/final_dat.csv", check.names = FALSE)
 
-fancy_dt(dat[c("ID", "Ticks", "year", "ArticleTitle", "city")], 
-         options = list(pageLength = 50,
-                        dom = "Bfrtip",
-                        columnDefs = list(
-                          list(targets = 0, render = render_publication),
-                          list(targets = 4, render = render_city)),
-                        buttons = c("copy", "csv")))
+datatable(dat[, c("ID", "Tick species", "Publication year", "ArticleTitle", "City", "DOI", "LID")], ,
+          escape = FALSE, 
+          style = "bootstrap5",
+          class = "wrap",
+          filter = "top",
+          extensions = c("Select", "SearchPanes", "Buttons"), 
+          selection = "none",
+          rownames = FALSE,
+          options = list(
+            pageLength = 50,
+            dom = "PBfrtip",
+            buttons = c("copy", "csv"),
+            searchPanes = list(initCollapsed = TRUE, viewCount = TRUE),
+            columnDefs = list(
+              list(targets = c(0, 2L:3, 5L:6), searchPanes = list(show = FALSE)),
+              list(targets = 0, render = render_collection),
+              list(targets = 1, 
+                   searchPanes = list(show = TRUE, orthogonal = "sp"),
+                   render = render_small_items_in_searchPanes),
+              list(targets = 3, render = render_publication_doi(5)),
+              list(targets = 4, render = render_city_lid(6)),
+              list(targets = c(5L:6), visible = FALSE)
+            )
+          )
+)
 
 ```
