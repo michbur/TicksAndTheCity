@@ -42,7 +42,7 @@ Collection ID: <span id="pub-id"></span>
 
 </div>
 
-<script src="scripts.js"></script>
+
 <script>
 document.addEventListener("DOMContentLoaded", async function () {
 const jsonFile = "./intermediates/final_dat.json"; 
