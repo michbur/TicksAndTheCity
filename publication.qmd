@@ -39,7 +39,6 @@ PMID: <a id="pub-pmid-link" href="#" target="_blank"></a>
 
 ### Collection data
 
-<script src="scripts.js"></script>
 <script>
 document.addEventListener("DOMContentLoaded", async function () {
 const pubJson = "intermediates/publications.json"; 
@@ -158,6 +157,8 @@ datatable(dat[, c("ID", "Tick species", "Source", "Collection year start", "Coll
             initComplete = JS("
               function(settings, json) {
                 let targetDoi = decodeURIComponent(window.location.search.substring(1));
+                
+                console.log(targetDoi);
                 
                 if (targetDoi) {
                   var api = this.api();

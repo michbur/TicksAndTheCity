@@ -67,7 +67,7 @@ datatable(dat[, c("ID", "Tick species", "Publication year", "ArticleTitle", "LID
           $('h1.title').text('Publications from ' + cityName + ' (' + countryName + ')');
           document.title = 'Publications from ' + cityName;
   
-          console.log('city');
+          console.log(city);
           var api = this.api();
           api.column(4).search('^' + $.fn.dataTable.util.escapeRegex(city) + '$', true, false).draw();
         } 
