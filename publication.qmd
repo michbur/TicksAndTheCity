@@ -75,8 +75,8 @@ const mapContainer = document.getElementById('pub-map');
 mapContainer.style.display = 'block';
 
 const map = L.map('pub-map');
-L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-attribution: '&copy; OpenStreetMap contributors &copy; CARTO'
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
 
 const bounds = L.latLngBounds();
@@ -128,7 +128,7 @@ source("helpers.R")
 
 dat <- read.csv("intermediates/final_dat.csv", check.names = FALSE)
 
-datatable(dat[, c("ID", "Tick species", "Source", "Collection year start", "Collection year end", "Collection site", "LID", "DOI")], 
+datatable(dat[, c("ID", "Tick species", "Source", "Collection year start", "Collection year end", "Collection site", "City", "LID", "DOI")], 
           escape = FALSE, 
           style = "bootstrap5",
           class = "wrap",
@@ -142,8 +142,8 @@ datatable(dat[, c("ID", "Tick species", "Source", "Collection year start", "Coll
             buttons = c("copy", "csv"),
             searchPanes = list(initCollapsed = TRUE, viewCount = FALSE),
             columnDefs = list(
-              list(targets = c(6L:7), visible = FALSE),
-              list(targets = c(0, 3L:7), searchPanes = list(show = FALSE)),
+              list(targets = c(7L:8), visible = FALSE),
+              list(targets = c(0, 3L:8), searchPanes = list(show = FALSE)),
               list(targets = 0, render = render_collection),
               list(targets = c(1L:2), 
                    searchPanes = list(show = TRUE, orthogonal = "sp"),

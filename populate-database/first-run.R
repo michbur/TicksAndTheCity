@@ -21,13 +21,18 @@ cities_locations <- select(source_dat, City, Country) |>
   tidygeocoder::geocode(city = City, country = Country, method = "osm",
                         lat = clat, long = clong)
 
+# group_by(cities_locations, clat, clong) |> 
+#   summarise(n = length(City), 
+#             names = paste0(City, collapse = ", ")) |> 
+#   arrange(desc(n))
+
 cities_locations[["LID"]] <- paste0("CIT", sprintf("%06d", 1:nrow(cities_locations)))
 
 new_publications <- download_pubmed_by_id(unique(source_dat[["DOI"]]))
 
 
 final_dat <- mutate(source_dat, ID = paste0("TIC", sprintf("%06d", 1:nrow(source_dat)))) |> 
-  select(-`Sygnatura czasowa`, -`Adres e-mail`, -`Referenced by (later paper DOI)`, -`Referencing (source paper DOI)`, -Comment) |> 
+  select(-`Sygnatura czasowa`, -`Adres e-mail`, -Comment) |> 
   mutate(`Collection site` = ifelse(is.na(`Collection site`), "Unknown", `Collection site`)) |> 
   rename(lat = Latitude, long = Longitude) |> 
   left_join(cities_locations, by = join_by(Country, City)) |> 

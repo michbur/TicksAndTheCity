@@ -2,9 +2,9 @@ async function fetchWithCache(file) {
     const cacheKey = `cached_csv_${file}`;
     const cachedData = sessionStorage.getItem(cacheKey);
 
-    if (cachedData) {
-        return JSON.parse(cachedData);
-    }
+    //if (cachedData) {
+    //    return JSON.parse(cachedData);
+    //}
 
     const response = await fetch(file);
     if (!response.ok) throw new Error("Cannot fetch file " + file);

@@ -47,7 +47,7 @@ country_dat <- dat |>
 
 
 leaflet(options = leafletOptions(preferCanvas = TRUE, minZoom = 3, maxZoom = 12)) |>
-  addProviderTiles(providers[["CartoDB.Positron"]]) |>
+  addProviderTiles(providers[["OpenStreetMap.Mapnik"]]) |>
   setView(lng = 15, lat = 55, zoom = 4) |> 
   addLabelOnlyMarkers(
     data = country_dat,
