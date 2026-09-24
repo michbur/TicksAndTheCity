@@ -21,6 +21,13 @@ cities_locations <- select(source_dat, City, Country) |>
   tidygeocoder::geocode(city = City, country = Country, method = "osm",
                         lat = clat, long = clong)
 
+
+tmp <- tidygeocoder::geocode(data.frame(City = "Betanzos", Country = "Spain"), 
+                      city = City, country = Country, method = "osm",
+                      lat = clat, long = clong, return_input = FALSE, 
+                      full_results = TRUE,
+                      limit = 5) 
+
 # group_by(cities_locations, clat, clong) |> 
 #   summarise(n = length(City), 
 #             names = paste0(City, collapse = ", ")) |> 
