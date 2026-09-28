@@ -24,8 +24,8 @@
     "objectID": "help.html#acknowledgements",
     "href": "help.html#acknowledgements",
     "title": "Help",
-    "section": "",
-    "text": "Contact\n\n:::"
+    "section": "Acknowledgements",
+    "text": "Acknowledgements\n\n\n Contact\n\n:::"
   },
   {
     "objectID": "collection.html",
@@ -61,5 +61,26 @@
     "title": "Publication Details",
     "section": "",
     "text": "Loading publication data…\n\n\n\n\n\n\n\nPublication data\n\nDOI:   PMID: \n\n\n\n\n\nJournal: \n\n\n\nAbstract\n\n\n\n\n\n\nCollection map\n\n\n\n\n\n\nCollection data\n\n\n\n\n\n\n\n\n\n Contact\n\n:::"
+  },
+  {
+    "objectID": "help.html#citation",
+    "href": "help.html#citation",
+    "title": "Help",
+    "section": "Citation",
+    "text": "Citation"
+  },
+  {
+    "objectID": "help.html#publication-retrieval",
+    "href": "help.html#publication-retrieval",
+    "title": "Help",
+    "section": "Publication retrieval",
+    "text": "Publication retrieval\nWe retrieve tick-related publications from PubMed using a broad search restricted to the Title/Abstract fields. The search includes:\ntick, ticks, tick-borne, hard tick, hard ticks, soft tick, soft ticks, Ixodida, Ixodidae, Argasidae, Ixodes, Ixodes ricinus, Dermacentor, Dermacentor reticulatus, Haemaphysalis, Rhipicephalus, Hyalomma, Argas, and Ornithodoros.\nRetrieved publications are geographically filtered for references to EU/EEA countries and cities, with city names derived from the GeoNames cities500 dataset.\nTitles and abstracts then undergo conservative LLM-assisted pre-screening based on predefined eligibility criteria. Publications are excluded only when there is explicit evidence of ineligibility. Missing information is treated as uncertainty rather than as evidence of ineligibility, and such records are retained for manual assessment.\nPotentially eligible publications are subsequently assessed manually using the full text and supplementary materials where available."
+  },
+  {
+    "objectID": "help.html#manual-curation",
+    "href": "help.html#manual-curation",
+    "title": "Help",
+    "section": "Manual curation",
+    "text": "Manual curation\nEligible publications are curated using predefined curation guidelines and a structured data-collection form.\nEach eligible tick collection site is assessed separately. Tick species, sampling source, collection method, sampling period and location are linked only when these relationships can be established from the publication. Unsupported associations are not inferred.\nWe include ticks collected from vegetation/environment or wild animals and exclude collections originating exclusively from humans, domestic or companion animals, or livestock.\nFor each curated collection, we record, whenever available:\n\nDOI;\npublication year;\ncollection year or period;\ntick species;\nlocality;\nexact collection site;\ncollection method;\nsampling source;\ngeographical coordinates.\n\nIf the urban character of a sampling site is not clear from the publication, the location is evaluated using the 2021 Eurostat DEGURBA classification. Locations in rural grid cells can additionally be retained as urban-edge when at least one directly neighbouring cell belongs to an eligible DEGURBA class.\nCoordinates are classified as:\n\nKnown – geographical coordinates are reported by the authors;\nApproximated – coordinates are not reported, but an exact named sampling site is provided and can be reliably identified and geocoded;\nUnknown – coordinates are not reported and the exact sampling site cannot be reliably identified."
   }
 ]

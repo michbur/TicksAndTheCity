@@ -121,6 +121,42 @@ ul.task-list li input[type="checkbox"] {
 
 <section id="tutorial" class="level1">
 <h1>Tutorial</h1>
+</section>
+<section id="data-curation" class="level1">
+<h1>Data curation</h1>
+<section id="publication-retrieval" class="level2">
+<h2 class="anchored" data-anchor-id="publication-retrieval">Publication retrieval</h2>
+<p>We retrieve tick-related publications from <strong>PubMed</strong> using a broad search restricted to the Title/Abstract fields. The search includes:</p>
+<p><code>tick</code>, <code>ticks</code>, <code>tick-borne</code>, <code>hard tick</code>, <code>hard ticks</code>, <code>soft tick</code>, <code>soft ticks</code>, <code>Ixodida</code>, <code>Ixodidae</code>, <code>Argasidae</code>, <code>Ixodes</code>, <code>Ixodes ricinus</code>, <code>Dermacentor</code>, <code>Dermacentor reticulatus</code>, <code>Haemaphysalis</code>, <code>Rhipicephalus</code>, <code>Hyalomma</code>, <code>Argas</code>, and <code>Ornithodoros</code>.</p>
+<p>Retrieved publications are geographically filtered for references to EU/EEA countries and cities, with city names derived from the <strong>GeoNames cities500</strong> dataset.</p>
+<p>Titles and abstracts then undergo conservative LLM-assisted pre-screening based on predefined eligibility criteria. Publications are excluded only when there is explicit evidence of ineligibility. Missing information is treated as uncertainty rather than as evidence of ineligibility, and such records are retained for manual assessment.</p>
+<p>Potentially eligible publications are subsequently assessed manually using the full text and supplementary materials where available.</p>
+</section>
+<section id="manual-curation" class="level2">
+<h2 class="anchored" data-anchor-id="manual-curation">Manual curation</h2>
+<p>Eligible publications are curated using predefined curation guidelines and a structured data-collection form.</p>
+<p>Each eligible tick collection site is assessed separately. Tick species, sampling source, collection method, sampling period and location are linked only when these relationships can be established from the publication. Unsupported associations are not inferred.</p>
+<p>We include ticks collected from vegetation/environment or wild animals and exclude collections originating exclusively from humans, domestic or companion animals, or livestock.</p>
+<p>For each curated collection, we record, whenever available:</p>
+<ul>
+<li>DOI;</li>
+<li>publication year;</li>
+<li>collection year or period;</li>
+<li>tick species;</li>
+<li>locality;</li>
+<li>exact collection site;</li>
+<li>collection method;</li>
+<li>sampling source;</li>
+<li>geographical coordinates.</li>
+</ul>
+<p>If the urban character of a sampling site is not clear from the publication, the location is evaluated using the <a href="https://ec.europa.eu/eurostat/web/gisco/geodata/population-distribution/degree-urbanisation">2021 Eurostat DEGURBA classification</a>. Locations in rural grid cells can additionally be retained as <strong>urban-edge</strong> when at least one directly neighbouring cell belongs to an eligible DEGURBA class.</p>
+<p>Coordinates are classified as:</p>
+<ul>
+<li><strong>Known</strong> – geographical coordinates are reported by the authors;</li>
+<li><strong>Approximated</strong> – coordinates are not reported, but an exact named sampling site is provided and can be reliably identified and geocoded;</li>
+<li><strong>Unknown</strong> – coordinates are not reported and the exact sampling site cannot be reliably identified.</li>
+</ul>
+</section>
 <section id="citation" class="level2">
 <h2 class="anchored" data-anchor-id="citation">Citation</h2>
 </section>

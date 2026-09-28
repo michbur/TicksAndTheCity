@@ -4,8 +4,52 @@ title: "Help"
 
 # Tutorial
 
+# Data curation
+
+## Publication retrieval
+
+We retrieve tick-related publications from **PubMed** using a broad search restricted to the Title/Abstract fields. The search includes:
+
+`tick`, `ticks`, `tick-borne`, `hard tick`, `hard ticks`, `soft tick`,
+`soft ticks`, `Ixodida`, `Ixodidae`, `Argasidae`, `Ixodes`,
+`Ixodes ricinus`, `Dermacentor`, `Dermacentor reticulatus`,
+`Haemaphysalis`, `Rhipicephalus`, `Hyalomma`, `Argas`, and `Ornithodoros`.
+
+Retrieved publications are geographically filtered for references to EU/EEA countries and cities, with city names derived from the **GeoNames cities500** dataset.
+
+Titles and abstracts then undergo conservative LLM-assisted pre-screening based on predefined eligibility criteria. Publications are excluded only when there is explicit evidence of ineligibility. Missing information is treated as uncertainty rather than as evidence of ineligibility, and such records are retained for manual assessment.
+
+Potentially eligible publications are subsequently assessed manually using the full text and supplementary materials where available.
+
+## Manual curation
+
+Eligible publications are curated using predefined curation guidelines and a structured data-collection form.
+
+Each eligible tick collection site is assessed separately. Tick species, sampling source, collection method, sampling period and location are linked only when these relationships can be established from the publication. Unsupported associations are not inferred.
+
+We include ticks collected from vegetation/environment or wild animals and exclude collections originating exclusively from humans, domestic or companion animals, or livestock.
+
+For each curated collection, we record, whenever available:
+
+- DOI;
+- publication year;
+- collection year or period;
+- tick species;
+- locality;
+- exact collection site;
+- collection method;
+- sampling source;
+- geographical coordinates.
+
+If the urban character of a sampling site is not clear from the publication, the location is evaluated using the [2021 Eurostat DEGURBA classification](https://ec.europa.eu/eurostat/web/gisco/geodata/population-distribution/degree-urbanisation). Locations in rural grid cells can additionally be retained as **urban-edge** when at least one directly neighbouring cell belongs to an eligible DEGURBA class.
+
+Coordinates are classified as:
+
+- **Known** – geographical coordinates are reported by the authors;
+- **Approximated** – coordinates are not reported, but an exact named sampling site is provided and can be reliably identified and geocoded;
+- **Unknown** – coordinates are not reported and the exact sampling site cannot be reliably identified.
+
 ## Citation
 
 ## Acknowledgements
-
 
