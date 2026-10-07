@@ -12,7 +12,7 @@ df2json <- function(x, id, file_name) {
 json2df <- function(file_name) {
   dplyr::bind_rows(lapply(jsonlite::fromJSON(file_name), function(high_level) {
     high_level[high_level == "NA"] <- NA
-    data.frame(high_level)
+    data.frame(high_level, check.names = FALSE)
   }))
 }
 
