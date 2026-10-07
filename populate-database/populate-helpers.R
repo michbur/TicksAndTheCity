@@ -1,7 +1,9 @@
+library(rentrez)
+library(xml2)
+
 introduce_NA_unnested <- function(x) {
   lapply(x, function(i) {
-    lapply(i, function(j) 
-      ifelse(j == "NA", NA, j))
+    lapply(i, function(j) ifelse(length(j) == 0 || j == "NA", NA, j))
   })
 }
 
@@ -41,4 +43,22 @@ download_pubmed_by_id <- function(dois) {
     do.call(rbind, args = _) |> 
     data.frame() |> 
     setNames(c("PMID", "DOI", "ArticleTitle", "Title", "AbstractText")) 
+}
+
+clean_geocode_df <- function(geocode_df) {
+  geocode_df |>
+    unnest_wider(
+      boundingbox,
+      names_sep = "",
+      names_repair = ~dplyr::recode(
+        .x,
+        boundingbox1 = "min_clat",
+        boundingbox2 = "max_clat",
+        boundingbox3 = "min_clong",
+        boundingbox4 = "max_clong"
+      )
+    ) |>
+    select(
+      City, Country, clat, clong, min_clat, max_clat, min_clong, max_clong
+    )
 }

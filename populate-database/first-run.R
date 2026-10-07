@@ -1,7 +1,5 @@
 library(dplyr)
 library(tidyr)
-library(rentrez)
-library(xml2)
 
 source("populate-database/populate-helpers.R")
 
