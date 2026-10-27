@@ -23,7 +23,7 @@ const coordFields = [
   ['pub-long', 'long']
 ];
 
-// Formating coordinates to four decimal places
+// Format coordinates to four decimal places
 const formatCoord = (val) => {
   if (!val || val === "ID or property not found" || isNaN(val)) {
     return "Not available"; 
@@ -32,7 +32,7 @@ const formatCoord = (val) => {
 };
 
 
-// Updating coordinates
+// Update coordinates
 async function updateCoord(elementId, property) {
   const element = document.getElementById(elementId);
 
@@ -46,7 +46,7 @@ async function updateCoord(elementId, property) {
 }
 
 
-// Updating all collection fields
+// Update all collection fields
 async function populateCollection() {
   const updates = [
     ...textFields.map(
@@ -76,7 +76,7 @@ async function loadCollection() {
       return;
     }
 
-    // Updating page content
+    // Update page content
     await populateCollection();
 
     setDisplay('loading', 'none');
