@@ -5,123 +5,16 @@ format:
     page-layout: full
 ---
 
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 
-```{r}
-#| label: main-map
-#| echo: false
-#| message: false
-#| warning: false
-#| out-height: 80vh
-#| out-width: 180vh
+<link rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2.4.0/src/easy-button.css">
+<script src="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2.4.0/src/easy-button.js"></script>
 
-library(dplyr)
-library(leaflet)
-library(htmltools)
+<div id="map-status" role="status">Loading map...</div>
 
-dat <- read.csv("intermediates/final_dat.csv", check.names = FALSE)
+<div id="main-map" style="height: 80vh; width: 100%;"></div>
 
-collection_dat <- dat |> 
-  mutate(clickable_link = paste0(
-    "<div class='marker-container'><a href='collection.html?", ID, "' target='_blank' class='marker-link'>", 
-    ID, "</a><span class='city-tooltip'></span></div>"
-  ))
-
-city_dat <- dat |> 
-  group_by(City, Country, clong, clat, LID) |> 
-  summarise(nice_doi = paste0(DOI, collapse = " <br> "),
-            n = length(DOI), 
-            .groups = "drop") |> 
-  mutate(clickable_link = paste0(
-    "<div class='marker-container'><a href='city.html?", LID, "' target='_blank' class='marker-link'>", City, ": ", 
-    n, "</a><span class='city-tooltip'></span></div>"
-  ))
-
-country_dat <- dat |> 
-  group_by(Country) |> 
-  summarise(n = length(DOI), .groups = "drop") |> 
-  inner_join(read.csv("./data/countries.csv")) |> 
-  mutate(link = paste0(
-    "<div class='marker-container country-zoom' data-lat='", clat, "' data-lng='", clong, "'>", 
-    Country, ": ", n, "</div>"
-  ))
-
-leaflet(options = leafletOptions(preferCanvas = TRUE, minZoom = 3, maxZoom = 12)) |>
-  addProviderTiles(providers[["OpenStreetMap.Mapnik"]]) |>
-  setView(lng = 15, lat = 55, zoom = 4) |> 
-  addLabelOnlyMarkers(
-    data = country_dat,
-    lng = ~clong,
-    lat = ~clat,
-    group = "CountryLevel",
-    label = ~lapply(link, htmltools::HTML),
-    labelOptions = labelOptions(noHide = TRUE, direction = "center", 
-                                textOnly = FALSE, interactive = TRUE, className = "custom-map-label")
-  ) |>
-  addLabelOnlyMarkers(
-    data = city_dat,
-    lng = ~clong,
-    lat = ~clat,
-    group = "CityLevel",
-    label = ~lapply(clickable_link, htmltools::HTML),
-    labelOptions = labelOptions(noHide = TRUE, direction = "center", 
-                                textOnly = FALSE, interactive = TRUE, className = "custom-map-label")
-  ) |>
-  addLabelOnlyMarkers(
-    data = collection_dat,
-    lng = ~long,
-    lat = ~lat,
-    group = "CollectionLevel",
-    label = ~lapply(clickable_link, htmltools::HTML),
-    labelOptions = labelOptions(noHide = TRUE, direction = "center", 
-                                textOnly = FALSE, interactive = TRUE, className = "custom-map-label")
-  ) |> 
-  groupOptions("CountryLevel", zoomLevels = 3L:5) |>
-  groupOptions("CityLevel", zoomLevels = 6L:9) |> 
-  groupOptions("CollectionLevel", zoomLevels = 10L:12) |> 
-  addEasyButtonBar(
-    easyButton(
-      icon = htmltools::HTML("<span>Country</span>"),
-      title = "Zoom to Country Level",
-      onClick = JS("function(btn, map) { map.setZoom(4); }")
-    ),
-    easyButton(
-      icon = htmltools::HTML("<span>City</span>"),
-      title = "Zoom to City Level",
-      onClick = JS("function(btn, map) { map.setZoom(6); }")
-    ),
-    easyButton(
-      icon = htmltools::HTML("<span>Collection</span>"),
-      title = "Zoom to Collection Level",
-      onClick = JS("function(btn, map) { map.setZoom(10); }")
-    )
-  ) |>
-  htmlwidgets::onRender("
-    function(el, x) {
-      var map = this; 
-      
-      var urlParams = new URLSearchParams(window.location.search);
-      var targetLat = urlParams.get('lat');
-      var targetLng = urlParams.get('lng');
-      
-      if (targetLat && targetLng) {
-        map.setView([parseFloat(targetLat), parseFloat(targetLng)], 11);
-      }
-      
-      el.addEventListener('click', function(e) {
-        
-        var marker = e.target.closest('.country-zoom');
-        
-        if (marker) {
-          e.preventDefault(); 
-          e.stopPropagation();
-          
-          var lat = parseFloat(marker.getAttribute('data-lat'));
-          var lng = parseFloat(marker.getAttribute('data-lng'));
-          
-          map.setView([lat, lng], 6);
-        }
-      }, true); 
-    }
-  ")
-
-```
+<script src="js/map.js" defer></script>
