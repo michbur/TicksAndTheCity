@@ -67,6 +67,12 @@ async function populateCollection() {
 }
 
 async function loadCollection() {
+  const loading = document.getElementById('loading');
+
+  const loadingTimer = setTimeout(() => {
+    loading.style.display = 'block';
+  }, 400);
+
   try {
     const targetId = decodeURIComponent(window.location.search.substring(1));
 
@@ -86,6 +92,9 @@ async function loadCollection() {
     console.error(error);
     setDisplay('loading', 'none');
     setDisplay('error-message', 'block', "Error populating data on the page.");
+  } finally {
+    clearTimeout(loadingTimer);
+    loading.style.display = 'none';
   }
 }
 

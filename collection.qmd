@@ -2,10 +2,12 @@
 title: "Collection Details"
 format:
   html:
-    toc: true
+    toc: false
 ---
 
-<div id="loading" class="alert alert-info">Loading publication data...</div>
+<div id="loading"  class="alert alert-info" style="display: none;" role="status">
+Loading collection data...
+</div>
 <div id="error-message" class="alert alert-danger" style="display: none;"></div>
 
 <div id="publication-card" class="detail-card" style="display: none;">
@@ -38,6 +40,8 @@ Collection ID: <span id="pub-id"></span>
 <div class="data-list">
 <p><strong>Publication year:</strong> <span id="pub-year"></span> </p>
 <p><strong>DOI:</strong> <a id="pub-doi" href="#" target="_blank"></a></p>
+</div>
+
 </div>
 
 <script src="js/collection.js" defer></script>
