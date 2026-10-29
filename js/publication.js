@@ -1,5 +1,5 @@
 const pubJson = 'intermediates/publications.json';
-const collectionJson = 'intermediates/final_dat.json;
+const collectionJson = 'intermediates/final_dat.json';
 
 const textFields = [
   ['pub-title', 'ArticleTitle'],
@@ -13,7 +13,7 @@ const linkFields = [
 ];
 
 // Find coordinates of collections in a publication
-function getMapPoints(allCollections, property) {
+function getMapPoints(allCollections, targetDoi) {
   return Object.values(allCollections).filter(
       row => row.DOI === targetDoi && row.lat && row.long
     );
@@ -60,12 +60,12 @@ function displayCollectionMap(mapPoints) {
 async function populatePublication() {
   const updates = [
     ...textFields.map(
-      ([id, property]) => updateElementWithData(jsonFile, id, property)
+      ([id, property]) => updateElementWithData(pubJson, id, property)
     ),
     ...linkFields.map(
       ([id, textProperty, linkProperty, prefix, separator]) =>
         updateElementWithDataAndLink(
-          jsonFile, id, textProperty, linkProperty, prefix
+          pubJson, id, textProperty, linkProperty, prefix
         )
     )
   ];
@@ -93,7 +93,7 @@ async function loadPublication() {
     setDisplay('publication-info', 'block');
     
     // Find and display associated collections on the map
-    const allCollections = await fetchWithCache(collectionsJson);
+    const allCollections = await fetchWithCache(collectionJson);
     const mapPoints = getMapPoints(allCollections, targetDoi);
     
     if (mapPoints.length > 0) {
