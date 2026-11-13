@@ -1,6 +1,5 @@
 library(dplyr)
-library(rentrez)
-library(xml2)
+library(tidyr)
 
 source("populate-database/populate-helpers.R")
 
@@ -19,7 +18,8 @@ countries_locations <- data.frame(Country = c("Austria", "Belgium", "Bulgaria", 
 cities_locations <- select(source_dat, City, Country) |>
   unique() |>
   tidygeocoder::geocode(city = City, country = Country, method = "osm",
-                        lat = clat, long = clong)
+                        lat = clat, long = clong, full_results = TRUE) |>
+  clean_geocode_df()
 
 # group_by(cities_locations, clat, clong) |> 
 #   summarise(n = length(City), 
@@ -30,8 +30,18 @@ cities_locations[["LID"]] <- paste0("CIT", sprintf("%06d", 1:nrow(cities_locatio
 
 new_publications <- download_pubmed_by_id(unique(source_dat[["DOI"]]))
 
+id_dat <- source_dat |>
+  mutate(ID = paste0("TIC", sprintf("%06d", 1:n())))
 
-final_dat <- mutate(source_dat, ID = paste0("TIC", sprintf("%06d", 1:nrow(source_dat)))) |> 
+timestamps <- id_dat |>
+  select(ID, `Sygnatura czasowa`) |>
+  mutate(`Sygnatura czasowa` = format(
+    `Sygnatura czasowa`,
+    "%Y-%m-%d %H:%M:%S",
+    tz = "UTC"
+  ))
+
+final_dat <- id_dat |> 
   select(-`Sygnatura czasowa`, -`Adres e-mail`, -Comment) |> 
   mutate(`Collection site` = ifelse(is.na(`Collection site`), "Unknown", `Collection site`)) |> 
   rename(lat = Latitude, long = Longitude) |> 
@@ -44,6 +54,7 @@ final_dat <- mutate(source_dat, ID = paste0("TIC", sprintf("%06d", 1:nrow(source
 
 write.csv(final_dat, "intermediates/final_dat.csv", row.names = FALSE)
 df2json(final_dat, final_dat[["ID"]], "intermediates/final_dat.json")
+df2json(timestamps, timestamps[["ID"]], "intermediates/timestamps.json")
 df2json(cities_locations, cities_locations[["LID"]], "intermediates/cities.json")
 df2json(new_publications, new_publications[["DOI"]], "intermediates/publications.json")
 
